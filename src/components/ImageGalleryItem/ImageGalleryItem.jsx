@@ -1,25 +1,44 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import css from './ImageGalleryItem.module.css';
+import Modal from '../Modal/Modal';
 
-const ImageGalleryItem = ({ image, bigImage, tags, onClick }) => {
-  return (
-    <li className={css.imageGalleryItem}>
-      <img
-        className={css.ImageGalleryItemImage}
-        src={image}
-        alt={tags}
-        onClick={() => onClick(bigImage)}
-      />
-    </li>
-  );
-};
+class ImageGalleryItem extends Component {
+  state = {
+    showModal: false,
+    largeImageURL: this.props.largeImageURL,
+  };
+
+  toggleModal = () => {
+    this.setState(prevState => ({ showModal: !prevState.showModal }));
+  };
+
+  render() {
+    const { showModal, largeImageURL } = this.state;
+    return (
+      <>
+        <li className={css.imageGalleryItem}>
+          <img
+            className={css.ImageGalleryItemImage}
+            src={this.props.webformatURL}
+            alt={this.props.tags}
+            onClick={this.toggleModal}
+          />
+        </li>
+        {showModal && (
+          <Modal
+            onClose={this.toggleModal}
+            largeImageURL={largeImageURL}
+            alt={this.props.tags}
+          />
+        )}
+      </>
+    );
+  }
+}
 
 ImageGalleryItem.propTypes = {
-  id: PropTypes.number,
-  image: PropTypes.string.isRequired,
-  bigImage: PropTypes.string.isRequired,
+  largeImageURL: PropTypes.string.isRequired,
   tags: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
 };
 export default ImageGalleryItem;
