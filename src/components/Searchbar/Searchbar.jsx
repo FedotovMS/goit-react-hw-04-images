@@ -4,9 +4,6 @@ import { toast } from 'react-toastify';
 import css from './Searchbar.module.css';
 
 const Searchbar = ({ onSubmit }) => {
-  // static propTypes = {
-  //   onSubmit: PropTypes.func.isRequired,
-  // };
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleInputChange = e => {
@@ -22,8 +19,6 @@ const Searchbar = ({ onSubmit }) => {
 
     onSubmit(searchQuery);
   };
-
-  // const { searchQuery } = this.state;
 
   return (
     <header className={css.searchbar}>
