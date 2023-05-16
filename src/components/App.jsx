@@ -67,30 +67,30 @@ export default function App() {
     ) {
       getImages();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, page]);
 
   useEffect(() => {
+    const handleNotification = () => {
+      const { type, message } = notification;
+
+      if (type === 'info') {
+        toast.info(message);
+        setNotification({ type: '', message: '' });
+      }
+      if (type === 'error') {
+        toast.error(message);
+        setNotification({ type: '', message: '' });
+      }
+      if (type === 'success') {
+        toast.success(message);
+        setNotification({ type: '', message: '' });
+      }
+    };
     if (notification.type !== '') {
       handleNotification();
     }
   }, [notification]);
-
-  const handleNotification = () => {
-    const { type, message } = notification;
-
-    if (type === 'info') {
-      toast.info(message);
-      setNotification({ type: '', message: '' });
-    }
-    if (type === 'error') {
-      toast.error(message);
-      setNotification({ type: '', message: '' });
-    }
-    if (type === 'success') {
-      toast.success(message);
-      setNotification({ type: '', message: '' });
-    }
-  };
 
   const formSubmitHandler = newSearchQuery => {
     if (newSearchQuery === searchQuery) {
