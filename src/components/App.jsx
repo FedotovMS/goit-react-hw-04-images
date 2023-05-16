@@ -17,6 +17,8 @@ export default function App() {
   const [notification, setNotification] = useState({ type: '', message: '' });
 
   useEffect(() => {
+    if (searchQuery === '') return;
+
     const getImages = async () => {
       setStatus('pending');
 
@@ -29,15 +31,12 @@ export default function App() {
             type: 'error',
             message: 'Nothing found. Please, change your request.',
           });
-        }
-        if (fetchedImages.length !== 0 && page === 1) {
+        } else if (fetchedImages.length !== 0 && page === 1) {
           setNotification({
             type: 'success',
             message: `We have found ${fetchedTotalImages} images on your request.`,
           });
-        }
-
-        if (
+        } else if (
           fetchedTotalImages > 0 &&
           page !== 1 &&
           fetchedTotalImages <= images.length + 12
@@ -48,7 +47,7 @@ export default function App() {
           });
         }
 
-        setImages(prevImages => [...prevImages, ...fetchedImages]);
+        setImages(fetchedImages);
         setStatus('resolved');
         setTotalImages(fetchedTotalImages);
       } catch (error) {
@@ -61,14 +60,8 @@ export default function App() {
       }
     };
 
-    if (
-      searchQuery !== '' &&
-      (page === 1 || (page !== 1 && totalImages > images.length))
-    ) {
-      getImages();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, page]);
+    getImages();
+  }, [searchQuery, page, images.length]);
 
   useEffect(() => {
     const handleNotification = () => {
@@ -76,16 +69,12 @@ export default function App() {
 
       if (type === 'info') {
         toast.info(message);
-        setNotification({ type: '', message: '' });
-      }
-      if (type === 'error') {
+      } else if (type === 'error') {
         toast.error(message);
-        setNotification({ type: '', message: '' });
-      }
-      if (type === 'success') {
+      } else if (type === 'success') {
         toast.success(message);
-        setNotification({ type: '', message: '' });
       }
+      setNotification({ type: '', message: '' });
     };
     if (notification.type !== '') {
       handleNotification();
@@ -123,4 +112,3 @@ export default function App() {
     </section>
   );
 }
-// comment
