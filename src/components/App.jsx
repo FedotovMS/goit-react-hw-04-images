@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Searchbar from './Searchbar/Searchbar';
@@ -15,6 +15,8 @@ export default function App() {
   const [images, setImages] = useState([]);
   const [status, setStatus] = useState('idle');
   const [notification, setNotification] = useState({ type: '', message: '' });
+
+  const prevNotificationRef = useRef();
 
   useEffect(() => {
     if (searchQuery === '') return;
@@ -64,9 +66,14 @@ export default function App() {
   }, [searchQuery, page, images.length]);
 
   useEffect(() => {
-    const handleNotification = () => {
-      const { type, message } = notification;
+    const { type, message } = notification;
+    const prevNotification = prevNotificationRef.current;
 
+    if (
+      type &&
+      type !== prevNotification.type &&
+      message !== prevNotification.message
+    ) {
       if (type === 'info') {
         toast.info(message);
       } else if (type === 'error') {
@@ -74,11 +81,9 @@ export default function App() {
       } else if (type === 'success') {
         toast.success(message);
       }
-      setNotification({ type: '', message: '' });
-    };
-    if (notification.type !== '') {
-      handleNotification();
     }
+
+    prevNotificationRef.current = notification;
   }, [notification]);
 
   const formSubmitHandler = newSearchQuery => {
